@@ -1,0 +1,39 @@
+diff --git a/src/westpa/westext/hamsm_restarting/restart_driver.py b/src/westpa/westext/hamsm_restarting/restart_driver.py
+index a02ef553..929c9a71 100644
+--- a/src/westpa/westext/hamsm_restarting/restart_driver.py
++++ b/src/westpa/westext/hamsm_restarting/restart_driver.py
+@@ -173,18 +173,26 @@ def prepare_coordinates(plugin_config, h5file, we_h5filename):
+             continue
+ 
+         for iS in range(nS):
+-            trajpath = WEfolder + "/traj_segs/%06d/%06d" % (n_iter, iS)
++            trajpath = WEfolder + "/traj_segs/traj_segs/%06d/%06d" % (n_iter, iS) # Modified to suit my case
+ 
+             try:
+-                coord0 = np.squeeze(md.load(f'{trajpath}/{parentTraj}', top=model.reference_structure.topology)._xyz)
++                raw0 = md.load(f'{trajpath}/{parentTraj}', top=model.reference_structure.topology)
++                raw0_mod = raw0.superpose(model.reference_structure, atom_indices=np.arange(0, model.nAtoms))
++                coord0 = np.squeeze(raw0_mod._xyz)
+             except OSError:
+                 log.warning("Parent traj file doesn't exist, loading reference structure coords")
+-                coord0 = np.squeeze(model.reference_structure._xyz)
+-
+-            coord1 = np.squeeze(md.load(f'{trajpath}/{childTraj}', top=model.reference_structure.topology)._xyz)
+-
+-            coords[iS, 0, :, :] = coord0
+-            coords[iS, 1, :, :] = coord1
++                raw0 = md.load(f'{trajpath}/{childTraj}', top=model.reference_structure.topology)
++                raw0_mod = raw0.superpose(model.reference_structure, atom_indices=np.arange(0, model.nAtoms))
++                coord0 = np.squeeze(raw0_mod._xyz)
++
++            raw1 = md.load(f'{trajpath}/{childTraj}', top=model.reference_structure.topology)
++            raw1_mod = raw1.superpose(model.reference_structure, atom_indices=np.arange(0, model.nAtoms))
++            coord1 = np.squeeze(raw1_mod._xyz)
++
++            #coords[iS, 0, :, :] = coord0
++            #coords[iS, 1, :, :] = coord1
++            coords[iS, 0, :, :] = coord0[:914] # Specific to BdpA, no longer recoomended
++            coords[iS, 1, :, :] = coord1[:914] # Specific to BdpA, no longer recommended
+ 
+         if not coords_exist:
+             dset[:] = coords

@@ -1,0 +1,6 @@
+parm diala_nowat_ff14_hmr.prmtop
+trajin diala_nowat_prod.nc
+multidihedral phi psi out dihedral.dat
+multidihedral omega1 dihtype omega1:CH3:C:N:CA:-2 out dihedral.dat
+multidihedral omega2 dihtype omega2:CA:C:N:C:2 out dihedral.dat
+go
