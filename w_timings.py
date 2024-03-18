@@ -58,14 +58,14 @@ class W_Timings:
         walltime = self.h5['summary']['walltime'][self.first_iter-1:self.last_iter].sum()
         aggtime = self.h5['summary']['n_particles'][self.first_iter-1:self.last_iter].sum()
 
-        print("walltime: ", walltime, "seconds")
+        print("\nwalltime: ", walltime, "seconds")
         print("walltime: ", walltime/60, "minutes")
         print("walltime: ", walltime/60/60, "hours")
         print("walltime: ", walltime/60/60/24, "days")
+        print(f"\nassuming tau of {self.tau} ps:")
         print("aggtime: ", aggtime, "segments ran for tau intervals")
-        print(f"assuming tau of {self.tau} ps:")
         print("aggtime: ", (aggtime * self.tau)/1000, "ns")
-        print("aggtime: ", (aggtime * self.tau)/1000/1000, "µs")
+        print("aggtime: ", (aggtime * self.tau)/1000/1000, "µs\n")
         #print("events:", count_events(f))
 
 def parse_arguments():
