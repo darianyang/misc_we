@@ -9,12 +9,12 @@ class W_Timings:
     Aggregate simulation and wallclock time extraction.
     """
 
-    def __init__(self, tau, h5="west.h5", first_iter=1, last_iter=None):
+    def __init__(self, h5="west.h5", tau=100, first_iter=1, last_iter=None):
         """
         Parameters
         ----------
         tau : int
-            WESTPA dynamics propagation time in picoseconds. E.g. 100 = 100ps.
+            WESTPA dynamics propagation time in picoseconds. Default 100 = 100ps.
         h5 : str
             Path to west.h5 file
         first_iter : int
@@ -62,7 +62,8 @@ class W_Timings:
         print("walltime: ", walltime/60, "minutes")
         print("walltime: ", walltime/60/60, "hours")
         print("walltime: ", walltime/60/60/24, "days")
-        print("aggtime: ", aggtime, "units")
+        print("aggtime: ", aggtime, "segments ran for tau intervals")
+        print(f"assuming tau of {self.tau} ps:")
         print("aggtime: ", (aggtime * self.tau)/1000, "ns")
         print("aggtime: ", (aggtime * self.tau)/1000/1000, "µs")
         #print("events:", count_events(f))
@@ -72,17 +73,18 @@ def parse_arguments():
         description="w_timings: a tool for aggregate simulation and wallclock time extraction."
     )
     parser.add_argument(
-        "--tau", "-t",
-        dest="tau",
-        type=int,
-        help="WESTPA dynamics propagation time in picoseconds. E.g. 100 = 100ps."
-    )
-    parser.add_argument(
         "-W", "-w", "--west", "--west-data", "-h5", "--h5file",
         dest="h5",
         type=str,
         default="west.h5",
         help="Path to west.h5 file"
+    )
+    parser.add_argument(
+        "--tau", "-t",
+        dest="tau",
+        type=int,
+        default=100,
+        help="WESTPA dynamics propagation time in picoseconds. Default 100 = 100ps."
     )
     parser.add_argument(
         "--first-iter", "-fi",
