@@ -389,16 +389,20 @@ if __name__ == "__main__":
     #fig, ax = plt.subplots()
     #k = Kinetics(f"D1D2_lt16oa/WT_v00/12oa/direct.h5", state=1, statepop="direct", ax=ax)
     args = parse_arguments()
-    k = Kinetics(**vars(args))
-    k.plot_rate()
-    # option to plot exp D1D2 values
-    if args.exp_values:
-        k.plot_exp_vals()
+
     # plot style
     if args.style == "default":
         plt.style.use("/Users/darian/github/wedap/wedap/styles/default.mplstyle")
     elif args.style is not None:
         plt.style.use(args.style)
+
+    # make plot
+    k = Kinetics(**vars(args))
+    k.plot_rate()
+
+    # option to plot exp D1D2 values
+    if args.exp_values:
+        k.plot_exp_vals()
     
     plt.tight_layout()
     # option to save figure output
