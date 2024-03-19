@@ -52,7 +52,7 @@ class Kinetics:
 
     def __init__(self, direct="direct.h5", assign=None, statepop="direct", tau=100e-12, state=1, 
                  label=None, units="rates", ax=None, savefig=None, color=None, 
-                 cumulative_avg=True):
+                 cumulative_avg=True, *args, **kwargs):
         """
         Parameters
         ----------
