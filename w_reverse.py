@@ -204,10 +204,10 @@ def parse_arguments():
     )
     # TODO: may need to be adjusted to store False when included
     parser.add_argument(
-        "--use-weights",
+        "--no-weights", "-nw",
         dest="use_weights",
-        action="store_true",
-        help="Include the recycled event weight when making the bstates.txt file"
+        action="store_false",
+        help="Don't include the recycled event weight when making the bstates.txt file"
     )
     return parser.parse_args()
 
