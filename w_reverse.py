@@ -133,7 +133,7 @@ class W_Reverse:
                     # but only use weights if requested, otherwise use equal weights
                     # bstates.txt row format: bstate_n | weight | bstate_filename
                     if self.use_weights:
-                        bstates_f.write(f"{idx} {weight} {rst_dest_name}\n") 
+                        bstates_f.write(f"{idx} {weight:.3e} {rst_dest_name}\n") 
                     else:
                         bstates_f.write(f"{idx} 1 {rst_dest_name}\n") 
                     n_bstates += 1
