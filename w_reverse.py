@@ -1,6 +1,5 @@
 
 import h5py
-import numpy as np
 from tqdm.auto import tqdm
 import os
 import shutil
@@ -19,7 +18,7 @@ class W_Reverse:
     TODO:
         * option to use w_assign/assign.h5 output for successful bstate selection
         * adapt for WE simulation traj_segs that used the hdf5 framework
-        * integrate into WESTPA, pull instance attributes from west.cfg
+        * integrate into WESTPA, pull instance attributes and args from west.cfg
         * change printing to west logging
     """
 
