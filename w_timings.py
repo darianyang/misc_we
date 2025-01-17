@@ -4,12 +4,16 @@ import argparse
 
 from tqdm.auto import tqdm
 
-class W_Timings:
+class WTimings:
     """
     Aggregate simulation and wallclock time extraction.
+
+    TODO:
+        * convert to use logging
+        * integrate into WESTPA, pull instance attributes from west.cfg (e.g. west.h5 filename)
     """
 
-    def __init__(self, h5="west.h5", tau=100, first_iter=1, last_iter=None):
+    def __init__(self, h5="west.h5", tau=100, first_iter=1, last_iter=None, count_events=False):
         """
         Parameters
         ----------
@@ -21,6 +25,8 @@ class W_Timings:
             By default start at iteration 1.
         last_iter : int
             Last iteration data to include, default is the last recorded iteration in the west.h5 file. 
+        count_events : bool
+            Option to also output the number of successfull recycling events.
         """
         self.tau = tau
         self.h5 = h5py.File(h5, mode="r")
@@ -30,15 +36,16 @@ class W_Timings:
             self.last_iter = int(last_iter)
         elif last_iter is None:
             self.last_iter = self.h5.attrs["west_current_iteration"] - 1
+        self.count_events = count_events
 
-    def count_events(self):
+    def get_event_count(self):
         """
         Check if the target state was reached, given the data in a WEST H5 file.
 
-        Parameters
-        ----------
-        h5 : h5py.File
-            west.h5 file
+        Returns
+        -------
+        int
+            Number of successful recycling events.
         """
         events = 0
         # Get the key to the final iteration. 
@@ -51,9 +58,9 @@ class W_Timings:
                 events += np.count_nonzero(endpoint_types == 3)
         return events
 
-    def w_timings(self):
+    def main(self):
         """
-        Public class method, get timings
+        Public class method, get timings.
         """
         walltime = self.h5['summary']['walltime'][self.first_iter-1:self.last_iter].sum()
         aggtime = self.h5['summary']['n_particles'][self.first_iter-1:self.last_iter].sum()
@@ -66,7 +73,8 @@ class W_Timings:
         print("aggtime: ", aggtime, "segments ran for tau intervals")
         print("aggtime: ", (aggtime * self.tau)/1000, "ns")
         print("aggtime: ", (aggtime * self.tau)/1000/1000, "µs\n")
-        #print("events:", count_events(f))
+        if self.count_events:
+            print("successful recycling events:", self.get_event_count(), "\n")
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -100,9 +108,16 @@ def parse_arguments():
         default=None,
         help="Last iteration to consider (default: last recorded iteration in west.h5)"
     )
+    parser.add_argument(
+        "--count-events", "-ce",
+        dest="count_events",
+        action="store_true",
+        default=False,
+        help="Include this flag to also output the number of successfull recycling events."
+    )
     return parser.parse_args()
 
 if __name__ == "__main__":
     args = parse_arguments()
-    timings = W_Timings(**vars(args))
-    timings.w_timings()
+    timings = WTimings(**vars(args))
+    timings.main()
